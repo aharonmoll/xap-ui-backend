@@ -18,7 +18,12 @@ public class MonitorController {
     @RequestMapping(value = "/xapstatistics" , method = RequestMethod.GET)
     @ResponseBody
     public XapStatistics printWelcome() {
-        return new XapStatistics();
+        XapStatistics result = new XapStatistics();
+
+
+        //code that collects statistics
+
+        return result;
     }
 
     public static class MachineStatistics {
