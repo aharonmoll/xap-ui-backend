@@ -18,7 +18,7 @@
             <dependency>
                 <groupId>com.gigaspaces</groupId>
                 <artifactId>gs-openspaces</artifactId>
-                <version>9.7.0-10493-M8</version>
+                <version>9.7.0-10496-RELEASE</version>
             </dependency>
     </dependencies>
 
