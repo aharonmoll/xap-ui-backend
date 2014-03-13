@@ -1,10 +1,24 @@
 package com.gigaspaces.monitor.website.controllers;
 
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.JsonSerializer;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.SerializerProvider;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openspaces.admin.Admin;
+import org.openspaces.admin.AdminFactory;
+import org.openspaces.admin.machine.Machine;
+import org.openspaces.admin.machine.Machines;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,93 +28,62 @@ import java.util.List;
 @Controller
 public class MonitorController {
 
+    private static Logger logger = LoggerFactory.getLogger(MonitorController.class);
+
+    Admin admin = new AdminFactory().addLocators("localhost:4174").createAdmin();
 
     @RequestMapping(value = "/xapstatistics" , method = RequestMethod.GET)
     @ResponseBody
-    public XapStatistics printWelcome() {
-        XapStatistics result = new XapStatistics();
-
-
-        //code that collects statistics
-
-        return result;
+    public String printWelcome() {
+        return toJson(admin);
     }
 
-    public static class MachineStatistics {
-        public String machineId = "";
-        public int componentsCount = 0;
-        public int availableMemory = 0;
-        public int cpu = 0;
-        public int readWriteTime = 0;
+    public String toJson(Admin admin){
+        ObjectMapper mapper = new ObjectMapper();
+        SerializationConfig config = mapper.getSerializationConfig();
+        config.addMixInAnnotations(Admin.class, AdminMixin.class);
+        config.addMixInAnnotations(Machines.class, MachinesMixin.class);
+        config.addMixInAnnotations(Machine.class, MachineMixin.class);
 
-        public String getMachineId() {
-            return machineId;
-        }
-
-        public void setMachineId(String machineId) {
-            this.machineId = machineId;
-        }
-
-        public int getComponentsCount() {
-            return componentsCount;
-        }
-
-        public void setComponentsCount(int componentsCount) {
-            this.componentsCount = componentsCount;
-        }
-
-        public int getAvailableMemory() {
-            return availableMemory;
-        }
-
-        public void setAvailableMemory(int availableMemory) {
-            this.availableMemory = availableMemory;
-        }
-
-        public int getCpu() {
-            return cpu;
-        }
-
-        public void setCpu(int cpu) {
-            this.cpu = cpu;
-        }
-
-        public int getReadWriteTime() {
-            return readWriteTime;
-        }
-
-        public void setReadWriteTime(int readWriteTime) {
-            this.readWriteTime = readWriteTime;
+        try {
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(admin);
+        } catch (IOException e) {
+            throw new RuntimeException("unable to get admin info",e);
         }
     }
 
-    public static class XapStatistics {
-        public int gscs = 0;
-        public int gsms = 0;
-        List<MachineStatistics> machineStatisticsList = new LinkedList<MachineStatistics>();
+    @JsonSerialize(using = AdminSerializer.class) public static interface AdminMixin{ }
+    @JsonSerialize(using = MachinesSerializer.class) public static interface MachinesMixin{ }
+    @JsonSerialize(using = MachineSerializer.class) public static interface MachineMixin{ }
 
-        public int getGscs() {
-            return gscs;
-        }
+    public static class AdminSerializer extends JsonSerializer<Admin>{
 
-        public void setGscs(int gscs) {
-            this.gscs = gscs;
-        }
-
-        public int getGsms() {
-            return gsms;
-        }
-
-        public void setGsms(int gsms) {
-            this.gsms = gsms;
-        }
-
-        public List<MachineStatistics> getMachineStatisticsList() {
-            return machineStatisticsList;
-        }
-
-        public void setMachineStatisticsList(List<MachineStatistics> machineStatisticsList) {
-            this.machineStatisticsList = machineStatisticsList;
+        @Override
+        public void serialize(Admin admin, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeNumberField("gscCount", admin.getGridServiceContainers().getSize());
+            jsonGenerator.writeNumberField("gsmCount", admin.getGridServiceManagers().getSize());
+            jsonGenerator.writeNumberField("lusCount", admin.getLookupServices().getSize());
+            jsonGenerator.writeObjectField("machines", admin.getMachines());
+            jsonGenerator.writeEndObject();
         }
     }
+
+    public static class MachinesSerializer extends JsonSerializer<Machines>{
+        @Override
+        public void serialize(Machines machines, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            jsonGenerator.writeObject(machines.getMachines());
+        }
+    }
+
+    public static class MachineSerializer extends JsonSerializer<Machine>{
+        @Override
+        public void serialize(Machine machine, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeNumberField("actualFreePhysicalMemorySizeInMB", machine.getOperatingSystem().getStatistics().getActualFreePhysicalMemorySizeInMB());
+            jsonGenerator.writeNumberField("cpuPerc", machine.getOperatingSystem().getStatistics().getCpuPerc());
+            jsonGenerator.writeEndObject();
+        }
+    }
+
 }
