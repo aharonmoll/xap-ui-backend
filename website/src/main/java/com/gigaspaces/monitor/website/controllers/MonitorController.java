@@ -9,6 +9,12 @@ import org.openspaces.admin.Admin;
 import org.openspaces.admin.AdminFactory;
 import org.openspaces.admin.machine.Machine;
 import org.openspaces.admin.machine.Machines;
+import org.openspaces.admin.space.Space;
+import org.openspaces.admin.space.SpaceInstance;
+import org.openspaces.admin.space.Spaces;
+import org.openspaces.core.GigaSpace;
+import org.openspaces.core.GigaSpaceConfigurer;
+import org.openspaces.core.space.UrlSpaceConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -28,16 +34,16 @@ public class MonitorController {
 
     private static Logger logger = LoggerFactory.getLogger(MonitorController.class);
 
-//    Admin admin = new AdminFactory().addLocators("10.20.58.71,10.20.58.72").createAdmin();
+    //    Admin admin = new AdminFactory().addLocators("10.20.58.71,10.20.58.72").createAdmin();
     Admin admin = new AdminFactory().addLocators("localhost:4174").createAdmin();
 
-    @RequestMapping(value = "/xapstatistics" , method = RequestMethod.GET)
+    @RequestMapping(value = "/xapstatistics", method = RequestMethod.GET)
     @ResponseBody
     public String printWelcome() {
         return toJson(admin);
     }
 
-    public String toJson(Admin admin){
+    public String toJson(Admin admin) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.addMixInAnnotations(Admin.class, AdminMixin.class);
         mapper.addMixInAnnotations(Machines.class, MachinesMixin.class);
@@ -47,19 +53,30 @@ public class MonitorController {
 
             JsonNode jsonNode = mapper.valueToTree(admin);
 //            logger.info(" I got a json " + jsonNode );
-            String jsonResult =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(admin);
+            String jsonResult = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(admin);
             JsonNode jsonNode1 = mapper.readTree(jsonResult);
 //            return jsonResult;
-            return new XmlMapper().writerWithDefaultPrettyPrinter().writeValueAsString( jsonNode1 );
+            return new XmlMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode1);
         } catch (IOException e) {
-            logger.error("unable to write XML",e);
-            throw new RuntimeException("unable to get admin info",e);
+            logger.error("unable to write XML", e);
+            throw new RuntimeException("unable to get admin info", e);
         }
     }
 
-    @JsonSerialize(using = AdminSerializer.class) public static interface AdminMixin{ }
-    @JsonSerialize(using = MachinesSerializer.class) public static interface MachinesMixin{ }
-    @JsonSerialize(using = MachineSerializer.class) public static interface MachineMixin{ }
+
+
+
+    @JsonSerialize(using = AdminSerializer.class)
+    public static interface AdminMixin {
+    }
+
+    @JsonSerialize(using = MachinesSerializer.class)
+    public static interface MachinesMixin {
+    }
+
+    @JsonSerialize(using = MachineSerializer.class)
+    public static interface MachineMixin {
+    }
 
     public static class AdminSerializer extends JsonSerializer<Admin> {
 
@@ -71,18 +88,36 @@ public class MonitorController {
             jsonGenerator.writeNumberField("gsmCount", admin.getGridServiceManagers().getSize());
             jsonGenerator.writeNumberField("lusCount", admin.getLookupServices().getSize());
             jsonGenerator.writeObjectField("machines", admin.getMachines());
+
+            List<SpaceMonitoring> spaceMonitorings = new LinkedList<SpaceMonitoring>();
+            Spaces spaces1 = admin.getSpaces();
+
+            for (Space singleSpace : spaces1) {
+                for (SpaceInstance spaceInstance : singleSpace.getInstances()) {
+                    if ( spaceInstance.getInstanceId() != spaceInstance.getBackupId() ){
+                        SpaceMonitoring spaceMonitoring = new SpaceMonitoring();
+                        spaceMonitoring.setName(spaceInstance.getSpaceInstanceName());
+                        spaceMonitoring.setSpaceInstance( spaceInstance );
+                        spaceMonitorings.add(spaceMonitoring);
+                    }
+
+                }
+            }
+            logger.info("num of spaces is : " + spaceMonitorings.size());
+            jsonGenerator.writeObjectField("space", spaceMonitorings);
+
             jsonGenerator.writeEndObject();
         }
     }
 
-    public static class MachinesSerializer extends JsonSerializer<Machines>{
+    public static class MachinesSerializer extends JsonSerializer<Machines> {
         @Override
         public void serialize(Machines machines, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
             jsonGenerator.writeObject(machines.getMachines());
         }
     }
 
-    public static class MachineSerializer extends JsonSerializer<Machine>{
+    public static class MachineSerializer extends JsonSerializer<Machine> {
         @Override
         public void serialize(Machine machine, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
             jsonGenerator.writeStartObject();
