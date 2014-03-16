@@ -31,6 +31,7 @@ public class MonitorController {
 
     private static Logger logger = LoggerFactory.getLogger(MonitorController.class);
 
+//    Admin admin = new AdminFactory().addLocators("10.20.58.71,10.20.58.72").createAdmin();
     Admin admin = new AdminFactory().addLocators("localhost:4174").createAdmin();
 
     @RequestMapping(value = "/xapstatistics" , method = RequestMethod.GET)

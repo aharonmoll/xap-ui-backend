@@ -1,12 +1,13 @@
 package com.gs;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.SerializerProvider;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.junit.Test;
 import org.openspaces.admin.Admin;
 import org.openspaces.admin.AdminFactory;
@@ -50,7 +51,7 @@ public class TestAdminPool {
 
     @Test
     public void testAdminPool() throws IOException {
-        String groups = "gigaspaces-9.7.0-XAPPremium-m7";
+        String groups = "gigaspaces-9.7.0-XAPPremium-ga";
         Admin admin = new AdminFactory().addGroup(groups).createAdmin();
         MachineAddedEventManager machineAdded = admin.getMachines().getMachineAdded();
 
@@ -75,32 +76,32 @@ public class TestAdminPool {
     private void toJson(Admin admin) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         SerializationConfig config = mapper.getSerializationConfig();
-        config.addMixInAnnotations(Admin.class, AdminMixin.class);
-        config.addMixInAnnotations(Application.class, ApplicationMixin.class);
-        config.addMixInAnnotations(Applications.class, ApplicationsMixin.class);
-        config.addMixInAnnotations(ProcessingUnits.class, ProcessingUnitsMixin.class);
-        config.addMixInAnnotations(ProcessingUnit.class, ProcessingUnitMixin.class);
-        config.addMixInAnnotations(Machines.class, MachinesMixin.class);
-        config.addMixInAnnotations(Machine.class, MachineMixin.class);
-        config.addMixInAnnotations(OperatingSystem.class, OperatingSystemMixin.class);
-        config.addMixInAnnotations(VirtualMachines.class, VirtualMachinesMixin.class);
-        config.addMixInAnnotations(VirtualMachine.class, VirtualMachineMixin.class);
-        config.addMixInAnnotations(OperatingSystemStatistics.class, OperatingSystemStatisticsMixin.class);
-        config.addMixInAnnotations(OperatingSystemStatistics.NetworkStatistics.class, NetworkStatisticsMixin.class);
-        config.addMixInAnnotations(VirtualMachineDetails.class, VirtualMachineDetailsMixin.class);
-        config.addMixInAnnotations(ProcessingUnitInstance.class, ProcessingUnitInstanceMixin.class);
-        config.addMixInAnnotations(SpaceInstance.class, SpaceInstanceMixin.class);
-        config.addMixInAnnotations(VirtualMachineStatistics.class, VirtualMachineStatisticsMixin.class);
-        config.addMixInAnnotations(BeanLevelProperties.class, BeanLevelPropertiesMixin.class);
-        config.addMixInAnnotations(ProcessingUnitPartition.class, ProcessingUnitPartitionMixin.class);
-        config.addMixInAnnotations(GridServiceContainer.class, GridServiceContainerMixin.class);
-        config.addMixInAnnotations(ExactZonesConfig.class, ExactZonesConfigMixin.class);
-        config.addMixInAnnotations(SpaceInstanceRuntimeDetails.class, SpaceInstanceRuntimeDetailsMixin.class);
-        config.addMixInAnnotations(OperatingSystems.class, OperatingSystemsMixin.class);
+        mapper.addMixInAnnotations(Admin.class, AdminMixin.class);
+        mapper.addMixInAnnotations(Application.class, ApplicationMixin.class);
+        mapper.addMixInAnnotations(Applications.class, ApplicationsMixin.class);
+        mapper.addMixInAnnotations(ProcessingUnits.class, ProcessingUnitsMixin.class);
+        mapper.addMixInAnnotations(ProcessingUnit.class, ProcessingUnitMixin.class);
+        mapper.addMixInAnnotations(Machines.class, MachinesMixin.class);
+        mapper.addMixInAnnotations(Machine.class, MachineMixin.class);
+        mapper.addMixInAnnotations(OperatingSystem.class, OperatingSystemMixin.class);
+        mapper.addMixInAnnotations(VirtualMachines.class, VirtualMachinesMixin.class);
+        mapper.addMixInAnnotations(VirtualMachine.class, VirtualMachineMixin.class);
+        mapper.addMixInAnnotations(OperatingSystemStatistics.class, OperatingSystemStatisticsMixin.class);
+        mapper.addMixInAnnotations(OperatingSystemStatistics.NetworkStatistics.class, NetworkStatisticsMixin.class);
+        mapper.addMixInAnnotations(VirtualMachineDetails.class, VirtualMachineDetailsMixin.class);
+        mapper.addMixInAnnotations(ProcessingUnitInstance.class, ProcessingUnitInstanceMixin.class);
+        mapper.addMixInAnnotations(SpaceInstance.class, SpaceInstanceMixin.class);
+        mapper.addMixInAnnotations(VirtualMachineStatistics.class, VirtualMachineStatisticsMixin.class);
+        mapper.addMixInAnnotations(BeanLevelProperties.class, BeanLevelPropertiesMixin.class);
+        mapper.addMixInAnnotations(ProcessingUnitPartition.class, ProcessingUnitPartitionMixin.class);
+        mapper.addMixInAnnotations(GridServiceContainer.class, GridServiceContainerMixin.class);
+        mapper.addMixInAnnotations(ExactZonesConfig.class, ExactZonesConfigMixin.class);
+        mapper.addMixInAnnotations(SpaceInstanceRuntimeDetails.class, SpaceInstanceRuntimeDetailsMixin.class);
+        mapper.addMixInAnnotations(OperatingSystems.class, OperatingSystemsMixin.class);
 
 
         logger.info("writing as string");
-        logger.info("{}", mapper.writeValueAsString(admin));
+        logger.info("{}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(admin));
         logger.info("writing as string end");
 
         logger.info("writing as string second time");
