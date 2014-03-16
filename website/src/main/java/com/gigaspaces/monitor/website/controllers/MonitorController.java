@@ -88,8 +88,15 @@ public class MonitorController {
             jsonGenerator.writeNumberField("gscCount", admin.getGridServiceContainers().getSize());
             jsonGenerator.writeNumberField("gsmCount", admin.getGridServiceManagers().getSize());
             jsonGenerator.writeNumberField("lusCount", admin.getLookupServices().getSize());
-            jsonGenerator.writeObjectField("machines", admin.getMachines());
 
+            jsonGenerator.writeObjectFieldStart("machines");
+            for (Machine machine : admin.getMachines().getMachines()) {
+                jsonGenerator.writeObjectField("machine", machine);
+            }
+            jsonGenerator.writeEndObject();
+
+
+            jsonGenerator.writeObjectFieldStart("spaces");
             List<SpaceMonitoring> spaceMonitorings = new LinkedList<SpaceMonitoring>();
             Spaces spaces = admin.getSpaces();
 
@@ -104,6 +111,7 @@ public class MonitorController {
             }
             logger.info("num of spaces is : " + spaceMonitorings.size());
             jsonGenerator.writeObjectField("space", spaceMonitorings);
+            jsonGenerator.writeEndObject();
 
             jsonGenerator.writeEndObject();
         }
@@ -120,10 +128,8 @@ public class MonitorController {
         @Override
         public void serialize(Machine machine, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
             jsonGenerator.writeStartObject();
-            jsonGenerator.writeObjectFieldStart("machine");
             jsonGenerator.writeNumberField("actualFreePhysicalMemorySizeInMB", machine.getOperatingSystem().getStatistics().getActualFreePhysicalMemorySizeInMB());
             jsonGenerator.writeNumberField("cpuPerc", machine.getOperatingSystem().getStatistics().getCpuPerc());
-            jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
         }
     }

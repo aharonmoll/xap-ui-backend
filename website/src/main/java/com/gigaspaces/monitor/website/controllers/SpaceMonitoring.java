@@ -7,7 +7,7 @@ import org.openspaces.core.GigaSpace;
  * Created by aharon on 3/16/14.
  */
 public class SpaceMonitoring {
-    public String name;
+    private String name;
 
     private SpaceInstance spaceInstance;
 
@@ -23,6 +23,10 @@ public class SpaceMonitoring {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setSpaceInstance(SpaceInstance space) {
