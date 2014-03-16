@@ -1,12 +1,13 @@
 package com.gigaspaces.monitor.website.controllers;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.SerializerProvider;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.openspaces.admin.Admin;
 import org.openspaces.admin.AdminFactory;
 import org.openspaces.admin.machine.Machine;
@@ -39,11 +40,10 @@ public class MonitorController {
     }
 
     public String toJson(Admin admin){
-        ObjectMapper mapper = new ObjectMapper();
-        SerializationConfig config = mapper.getSerializationConfig();
-        config.addMixInAnnotations(Admin.class, AdminMixin.class);
-        config.addMixInAnnotations(Machines.class, MachinesMixin.class);
-        config.addMixInAnnotations(Machine.class, MachineMixin.class);
+        ObjectMapper mapper = new XmlMapper();
+        mapper.addMixInAnnotations(Admin.class, AdminMixin.class);
+        mapper.addMixInAnnotations(Machines.class, MachinesMixin.class);
+        mapper.addMixInAnnotations(Machine.class, MachineMixin.class);
 
         try {
             return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(admin);
@@ -56,7 +56,7 @@ public class MonitorController {
     @JsonSerialize(using = MachinesSerializer.class) public static interface MachinesMixin{ }
     @JsonSerialize(using = MachineSerializer.class) public static interface MachineMixin{ }
 
-    public static class AdminSerializer extends JsonSerializer<Admin>{
+    public static class AdminSerializer extends JsonSerializer<Admin> {
 
         @Override
         public void serialize(Admin admin, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
