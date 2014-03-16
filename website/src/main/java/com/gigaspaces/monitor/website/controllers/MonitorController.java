@@ -2,10 +2,7 @@ package com.gigaspaces.monitor.website.controllers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.openspaces.admin.Admin;
@@ -41,14 +38,21 @@ public class MonitorController {
     }
 
     public String toJson(Admin admin){
-        ObjectMapper mapper = new XmlMapper();
+        ObjectMapper mapper = new ObjectMapper();
         mapper.addMixInAnnotations(Admin.class, AdminMixin.class);
         mapper.addMixInAnnotations(Machines.class, MachinesMixin.class);
         mapper.addMixInAnnotations(Machine.class, MachineMixin.class);
 
         try {
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(admin);
+
+            JsonNode jsonNode = mapper.valueToTree(admin);
+//            logger.info(" I got a json " + jsonNode );
+            String jsonResult =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(admin);
+            JsonNode jsonNode1 = mapper.readTree(jsonResult);
+//            return jsonResult;
+            return new XmlMapper().writerWithDefaultPrettyPrinter().writeValueAsString( jsonNode1 );
         } catch (IOException e) {
+            logger.error("unable to write XML",e);
             throw new RuntimeException("unable to get admin info",e);
         }
     }
@@ -61,6 +65,7 @@ public class MonitorController {
 
         @Override
         public void serialize(Admin admin, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            logger.info("serializing admin");
             jsonGenerator.writeStartObject();
             jsonGenerator.writeNumberField("gscCount", admin.getGridServiceContainers().getSize());
             jsonGenerator.writeNumberField("gsmCount", admin.getGridServiceManagers().getSize());
@@ -81,8 +86,10 @@ public class MonitorController {
         @Override
         public void serialize(Machine machine, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
             jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectFieldStart("machine");
             jsonGenerator.writeNumberField("actualFreePhysicalMemorySizeInMB", machine.getOperatingSystem().getStatistics().getActualFreePhysicalMemorySizeInMB());
             jsonGenerator.writeNumberField("cpuPerc", machine.getOperatingSystem().getStatistics().getCpuPerc());
+            jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
         }
     }
