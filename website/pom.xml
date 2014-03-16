@@ -19,6 +19,8 @@
 
     <properties>
         <spring.version>3.2.4.RELEASE</spring.version>
+        <gigaspaces-scope>provided</gigaspaces-scope>
+
     </properties>
 
     <dependencies>
@@ -27,6 +29,7 @@
             <groupId>com.gigaspaces</groupId>
             <artifactId>gs-openspaces</artifactId>
             <version>9.7.0-10496-RELEASE</version>
+            <scope>${gigaspaces-scope}</scope>
         </dependency>
 
         <dependency>
@@ -62,5 +65,18 @@
         </dependency>
 
     </dependencies>
+
+
+
+
+
+    <profiles>
+        <profile>
+            <id>with_gigaspaces</id>
+            <properties>
+                <gigaspaces-scope>compile</gigaspaces-scope>
+            </properties>
+        </profile>
+    </profiles>
     
 </project>
