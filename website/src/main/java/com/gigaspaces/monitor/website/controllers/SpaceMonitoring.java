@@ -13,15 +13,12 @@ public class SpaceMonitoring {
 
     public boolean isReadWriteOk() {
         try {
-            Data data1 = new Data(0, "test");
-            Data data2 = new Data(1, "test");
+            Data data = new Data(0, "test");
 
             GigaSpace gspace = spaceInstance.getGigaSpace();
 
-            gspace.write(data1, 100);
-            gspace.write(data2, 100);
-            gspace.take(data1, 100);
-            gspace.take(data2, 100);
+            gspace.write(data);
+            gspace.read(data);
             return true;
         } catch (Exception e) {
             return false;

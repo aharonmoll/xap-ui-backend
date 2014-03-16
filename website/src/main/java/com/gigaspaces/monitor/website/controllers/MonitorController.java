@@ -11,6 +11,7 @@ import org.openspaces.admin.machine.Machine;
 import org.openspaces.admin.machine.Machines;
 import org.openspaces.admin.space.Space;
 import org.openspaces.admin.space.SpaceInstance;
+import org.openspaces.admin.space.SpacePartition;
 import org.openspaces.admin.space.Spaces;
 import org.openspaces.core.GigaSpace;
 import org.openspaces.core.GigaSpaceConfigurer;
@@ -90,17 +91,15 @@ public class MonitorController {
             jsonGenerator.writeObjectField("machines", admin.getMachines());
 
             List<SpaceMonitoring> spaceMonitorings = new LinkedList<SpaceMonitoring>();
-            Spaces spaces1 = admin.getSpaces();
+            Spaces spaces = admin.getSpaces();
 
-            for (Space singleSpace : spaces1) {
-                for (SpaceInstance spaceInstance : singleSpace.getInstances()) {
-                    if ( spaceInstance.getInstanceId() != spaceInstance.getBackupId() ){
-                        SpaceMonitoring spaceMonitoring = new SpaceMonitoring();
-                        spaceMonitoring.setName(spaceInstance.getSpaceInstanceName());
-                        spaceMonitoring.setSpaceInstance( spaceInstance );
-                        spaceMonitorings.add(spaceMonitoring);
-                    }
+            for (Space singleSpace : spaces) {
+                for (SpacePartition spacePartition : singleSpace.getPartitions()) {
 
+                    SpaceMonitoring spaceMonitoring = new SpaceMonitoring();
+                    spaceMonitoring.setName(spacePartition.getPrimary().getSpaceInstanceName());
+                    spaceMonitoring.setSpaceInstance(spacePartition.getPrimary());
+                    spaceMonitorings.add(spaceMonitoring);
                 }
             }
             logger.info("num of spaces is : " + spaceMonitorings.size());
