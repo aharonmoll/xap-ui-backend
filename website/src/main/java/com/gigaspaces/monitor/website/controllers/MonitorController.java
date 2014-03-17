@@ -1,5 +1,6 @@
 package com.gigaspaces.monitor.website.controllers;
 
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
@@ -22,8 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by aharon on 3/12/14.
@@ -35,6 +38,30 @@ public class MonitorController {
 
     @Autowired
     Admin admin = null;
+
+    @Autowired
+    BeanFactory beanFactory = null;
+
+
+    @RequestMapping( value = "/guy")
+    @ResponseBody
+    public String guy() throws IOException {
+        List<Integer> numbers = new LinkedList<Integer>();
+        numbers.add(1);
+        numbers.add(2);
+
+        Map<String,Object> someObj = new HashMap<String, Object>();
+
+        someObj.put("data",numbers);
+
+        return new XmlMapper().writeValueAsString(someObj);
+    }
+
+    @RequestMapping( value = "/testLocators")
+    @ResponseBody
+    public String testLocators() {
+        return beanFactory.getLocators();
+    }
 
     @RequestMapping(value = "/xapstatistics", method = RequestMethod.GET)
     @ResponseBody
@@ -150,5 +177,13 @@ public class MonitorController {
 
     public void setAdmin(Admin admin) {
         this.admin = admin;
+    }
+
+    public BeanFactory getBeanFactory() {
+        return beanFactory;
+    }
+
+    public void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
 }
