@@ -7,22 +7,25 @@ import com.gigaspaces.annotation.pojo.SpaceRouting;
 
 @SpaceClass
 public class Data {
-    private Integer id;
+    private String id;
     private String name;
 
     public Data(){};
 
-    public Data(Integer id, String name)
+    public Data(String name) {
+        this.name = name;
+    }
+
+    public Data(String id, String name)
     {
         this.id=id;
         this.name=name;
     }
 
-    @SpaceId(autoGenerate=false)
-    @SpaceRouting
-    public Integer getId() { return id;}
+    @SpaceId(autoGenerate=true)
+    public String getId() { return id;}
 
-    public void setId(Integer id) {  this.id = id; }
+    public void setId(String id) {  this.id = id; }
 
     public String getName() { return name; }
 

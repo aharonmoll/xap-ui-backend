@@ -10,17 +10,15 @@ import org.openspaces.admin.AdminFactory;
 import org.openspaces.admin.machine.Machine;
 import org.openspaces.admin.machine.Machines;
 import org.openspaces.admin.space.Space;
-import org.openspaces.admin.space.SpaceInstance;
 import org.openspaces.admin.space.SpacePartition;
 import org.openspaces.admin.space.Spaces;
-import org.openspaces.core.GigaSpace;
-import org.openspaces.core.GigaSpaceConfigurer;
-import org.openspaces.core.space.UrlSpaceConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -35,13 +33,25 @@ public class MonitorController {
 
     private static Logger logger = LoggerFactory.getLogger(MonitorController.class);
 
-    //    Admin admin = new AdminFactory().addLocators("10.20.58.71,10.20.58.72").createAdmin();
-    Admin admin = new AdminFactory().addLocators("localhost:4174").createAdmin();
+    @Autowired
+    Admin admin = null;
 
     @RequestMapping(value = "/xapstatistics", method = RequestMethod.GET)
     @ResponseBody
     public String printWelcome() {
+
         return toJson(admin);
+    }
+
+
+
+    @RequestMapping(value = "/settings", method = RequestMethod.GET)
+    @ResponseBody
+    public String setSettings( @RequestParam String locators ){
+        logger.info("reinitializing locators with [{}]", locators);
+//        "localhost:4174"
+        admin = new AdminFactory().addLocators(locators).createAdmin();
+        return "ok";
     }
 
     public String toJson(Admin admin) {
@@ -134,4 +144,11 @@ public class MonitorController {
         }
     }
 
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
 }
