@@ -126,10 +126,11 @@ public class MonitorController {
             jsonGenerator.writeNumberField("gsmCount", admin.getGridServiceManagers().getSize());
             jsonGenerator.writeNumberField("lusCount", admin.getLookupServices().getSize());
 
+
+
+
             jsonGenerator.writeObjectFieldStart("machines");
-            for (Machine machine : admin.getMachines().getMachines()) {
-                jsonGenerator.writeObjectField("machine", machine);
-            }
+            jsonGenerator.writeObjectField("machine", admin.getMachines().getMachines());
             jsonGenerator.writeEndObject();
 
 
