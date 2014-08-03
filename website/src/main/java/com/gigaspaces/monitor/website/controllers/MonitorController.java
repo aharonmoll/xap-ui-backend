@@ -3,13 +3,18 @@ package com.gigaspaces.monitor.website.controllers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.openspaces.admin.Admin;
 import org.openspaces.admin.AdminFactory;
 import org.openspaces.admin.machine.Machine;
 import org.openspaces.admin.machine.Machines;
+import org.openspaces.admin.pu.ProcessingUnit;
+import org.openspaces.admin.pu.ProcessingUnits;
 import org.openspaces.admin.space.Space;
 import org.openspaces.admin.space.SpacePartition;
 import org.openspaces.admin.space.Spaces;
@@ -127,8 +132,6 @@ public class MonitorController {
             jsonGenerator.writeNumberField("lusCount", admin.getLookupServices().getSize());
 
 
-
-
             jsonGenerator.writeObjectFieldStart("machines");
             jsonGenerator.writeObjectField("machine", admin.getMachines().getMachines());
             jsonGenerator.writeEndObject();
@@ -149,6 +152,22 @@ public class MonitorController {
             }
             logger.info("num of spaces is : " + spaceMonitorings.size());
             jsonGenerator.writeObjectField("space", spaceMonitorings);
+            jsonGenerator.writeEndObject();
+
+
+            jsonGenerator.writeObjectFieldStart("processingUnits");
+            LinkedList<PuMonitoring> puMonitorings = new LinkedList<PuMonitoring>();
+            ProcessingUnits processingUnits  = admin.getProcessingUnits();
+
+            for (ProcessingUnit pu : processingUnits) {
+                    PuMonitoring puMonitoring = new PuMonitoring();
+                    puMonitoring.setName(pu.getName());
+                    puMonitoring.setPlannedNumOfInstances(pu.getPlannedNumberOfInstances());
+                    puMonitoring.setNumOfActiveInstances(pu.getInstances().length);
+                    puMonitorings.add(puMonitoring);
+            }
+            logger.info("num of processing units is : " + puMonitorings.size());
+            jsonGenerator.writeObjectField("processingUnit", puMonitorings);
             jsonGenerator.writeEndObject();
 
             jsonGenerator.writeEndObject();
