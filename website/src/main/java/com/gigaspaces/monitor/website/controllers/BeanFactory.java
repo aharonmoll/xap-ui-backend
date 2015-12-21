@@ -15,8 +15,17 @@ public class BeanFactory {
     private static Logger logger = LoggerFactory.getLogger(BeanFactory.class);
 
     public Admin getAdmin(){
-        logger.info("locators is [{}]", locators);
-        return new AdminFactory().addLocator(locators).createAdmin();
+        try {
+            logger.info("locators is [{}]", locators);
+            return new AdminFactory().addLocator(locators).createAdmin();
+        }
+        catch (Exception e){
+            logger.info("Excption" + e);
+            return null;
+        }
+        finally {
+            logger.info("Get the Admin");
+        }
     }
 
     public String getLocators() {

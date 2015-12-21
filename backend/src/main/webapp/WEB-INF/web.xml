@@ -5,15 +5,14 @@
 
     <display-name>GS Admin UI</display-name>
 
-    <!--<context-param>-->
-        <!--<param-name>contextConfigLocation</param-name>-->
-        <!--<param-value>-->
-            <!--/WEB-INF/api-servlet.xml-->
-        <!--</param-value>-->
-    <!--</context-param>-->
-    <!--<listener>-->
-        <!--<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>-->
-    <!--</listener>-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/api-servlet.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 
     <servlet>
         <servlet-name>api</servlet-name>
@@ -23,7 +22,8 @@
 
     <servlet-mapping>
         <servlet-name>api</servlet-name>
-        <url-pattern>/backend/*</url-pattern>
+        <!--url-pattern>/backend/*</url-pattern-->
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
 

@@ -1,5 +1,7 @@
 package app;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -10,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Component
 class DummyBookRepository implements BookRepository {
+  private static Logger logger = LoggerFactory.getLogger(DummyBookRepository.class);
   private final Map<Integer, Book> books = new ConcurrentHashMap<Integer, Book>();
 
   @Override
@@ -19,6 +22,7 @@ class DummyBookRepository implements BookRepository {
 
   @Override
   public List<Book> findAll() {
+    logger.info("findAll starting...");
     List<Book> books = new ArrayList<Book>(this.books.values());
     Collections.sort(books, new Comparator<Book>() {
       @Override
@@ -26,6 +30,7 @@ class DummyBookRepository implements BookRepository {
         return o1.getId() - o2.getId();
       }
     });
+    logger.info("findAll coming to its end ...");
     return books;
   }
 

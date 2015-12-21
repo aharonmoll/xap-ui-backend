@@ -48,7 +48,7 @@ public class MonitorController {
     BeanFactory beanFactory = null;
 
 
-    @RequestMapping( value = "/guy")
+    @RequestMapping( value = "/aharon")
     @ResponseBody
     public String guy() throws IOException {
         List<Integer> numbers = new LinkedList<Integer>();
@@ -110,15 +110,15 @@ public class MonitorController {
 
 
     @JsonSerialize(using = AdminSerializer.class)
-    public static interface AdminMixin {
+    public interface AdminMixin {
     }
 
     @JsonSerialize(using = MachinesSerializer.class)
-    public static interface MachinesMixin {
+    public interface MachinesMixin {
     }
 
     @JsonSerialize(using = MachineSerializer.class)
-    public static interface MachineMixin {
+    public interface MachineMixin {
     }
 
     public static class AdminSerializer extends JsonSerializer<Admin> {
@@ -176,14 +176,14 @@ public class MonitorController {
 
     public static class MachinesSerializer extends JsonSerializer<Machines> {
         @Override
-        public void serialize(Machines machines, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+        public void serialize(Machines machines, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
             jsonGenerator.writeObject(machines.getMachines());
         }
     }
 
     public static class MachineSerializer extends JsonSerializer<Machine> {
         @Override
-        public void serialize(Machine machine, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+        public void serialize(Machine machine, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectField("machineName",machine.getHostName());
             jsonGenerator.writeNumberField("actualFreePhysicalMemorySizeInMB", machine.getOperatingSystem().getStatistics().getActualFreePhysicalMemorySizeInMB());

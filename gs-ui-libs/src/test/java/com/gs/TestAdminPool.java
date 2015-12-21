@@ -40,7 +40,7 @@ import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
- * User: guym
+ * User: aharon
  * Date: 12/12/13
  * Time: 5:01 PM
  */
@@ -51,7 +51,7 @@ public class TestAdminPool {
 
     @Test
     public void testAdminPool() throws IOException {
-        String groups = "gigaspaces-9.7.0-XAPPremium-ga";
+        String groups = "aharon";
         Admin admin = new AdminFactory().addGroup(groups).createAdmin();
         MachineAddedEventManager machineAdded = admin.getMachines().getMachineAdded();
 
@@ -110,35 +110,35 @@ public class TestAdminPool {
     }
 
 
-    @JsonSerialize(using = AdminSerializer.class) public static interface AdminMixin { }
-    @JsonSerialize(using = ApplicationsSerializer.class) public static interface ApplicationsMixin { }
-    @JsonSerialize(using = ApplicationSerializer.class) public static interface ApplicationMixin { }
-    @JsonSerialize(using = ProcessingUnitsSerializer.class) public static interface ProcessingUnitsMixin { }
-    @JsonSerialize(using = ProcessingUnitSerializer.class) public static interface ProcessingUnitMixin { }
-    @JsonSerialize(using = MachinesSerializer.class) public static interface MachinesMixin { }
-    @JsonSerialize(using = MachineSerializer.class) public static interface MachineMixin { }
-    @JsonSerialize(using = OperatingSystemSerializer.class) public static interface OperatingSystemMixin { }
-    @JsonSerialize(using = OperatingSystemStatisticsSerializer.class) public static interface OperatingSystemStatisticsMixin { }
-    @JsonSerialize(using = NetworkStatisticsSerializer.class) public static interface NetworkStatisticsMixin { }
-    @JsonSerialize(using = VirtualMachinesSerializer.class) public static interface VirtualMachinesMixin { }
-    @JsonSerialize(using = VirtualMachineSerializer.class) public static interface VirtualMachineMixin { }
-    @JsonSerialize(using = VirtualMachineDetailsSerializer.class) public static interface VirtualMachineDetailsMixin { }
-    @JsonSerialize(using = ProcessingUnitInstanceSerializer.class) public static interface ProcessingUnitInstanceMixin { }
-    @JsonSerialize(using = SpaceInstanceSerializer.class) public static interface SpaceInstanceMixin { }
-    @JsonSerialize(using = VirtualMachineStatisticsSerializer.class) public static interface VirtualMachineStatisticsMixin { }
-    @JsonSerialize(using = BeanLevelPropertiesSerializer.class) public static interface BeanLevelPropertiesMixin { }
-    @JsonSerialize(using = ProcessingUnitPartitionSerializer.class) public static interface ProcessingUnitPartitionMixin { }
-    @JsonSerialize(using = GridServiceContainerSerializer.class) public static interface GridServiceContainerMixin { }
-    @JsonSerialize(using = ExactZonesConfigSerializer.class) public static interface ExactZonesConfigMixin { }
-    @JsonSerialize(using = SpaceInstanceRuntimeDetailsSerializer.class) public static interface SpaceInstanceRuntimeDetailsMixin { }
-    @JsonSerialize(using = OperatingSystemsSerializer.class) public static interface OperatingSystemsMixin { }
+    @JsonSerialize(using = AdminSerializer.class) public interface AdminMixin { }
+    @JsonSerialize(using = ApplicationsSerializer.class) public interface ApplicationsMixin { }
+    @JsonSerialize(using = ApplicationSerializer.class) public interface ApplicationMixin { }
+    @JsonSerialize(using = ProcessingUnitsSerializer.class) public interface ProcessingUnitsMixin { }
+    @JsonSerialize(using = ProcessingUnitSerializer.class) public interface ProcessingUnitMixin { }
+    @JsonSerialize(using = MachinesSerializer.class) public interface MachinesMixin { }
+    @JsonSerialize(using = MachineSerializer.class) public interface MachineMixin { }
+    @JsonSerialize(using = OperatingSystemSerializer.class) public interface OperatingSystemMixin { }
+    @JsonSerialize(using = OperatingSystemStatisticsSerializer.class) public interface OperatingSystemStatisticsMixin { }
+    @JsonSerialize(using = NetworkStatisticsSerializer.class) public interface NetworkStatisticsMixin { }
+    @JsonSerialize(using = VirtualMachinesSerializer.class) public interface VirtualMachinesMixin { }
+    @JsonSerialize(using = VirtualMachineSerializer.class) public interface VirtualMachineMixin { }
+    @JsonSerialize(using = VirtualMachineDetailsSerializer.class) public interface VirtualMachineDetailsMixin { }
+    @JsonSerialize(using = ProcessingUnitInstanceSerializer.class) public interface ProcessingUnitInstanceMixin { }
+    @JsonSerialize(using = SpaceInstanceSerializer.class) public interface SpaceInstanceMixin { }
+    @JsonSerialize(using = VirtualMachineStatisticsSerializer.class) public interface VirtualMachineStatisticsMixin { }
+    @JsonSerialize(using = BeanLevelPropertiesSerializer.class) public interface BeanLevelPropertiesMixin { }
+    @JsonSerialize(using = ProcessingUnitPartitionSerializer.class) public interface ProcessingUnitPartitionMixin { }
+    @JsonSerialize(using = GridServiceContainerSerializer.class) public interface GridServiceContainerMixin { }
+    @JsonSerialize(using = ExactZonesConfigSerializer.class) public interface ExactZonesConfigMixin { }
+    @JsonSerialize(using = SpaceInstanceRuntimeDetailsSerializer.class) public interface SpaceInstanceRuntimeDetailsMixin { }
+    @JsonSerialize(using = OperatingSystemsSerializer.class) public interface OperatingSystemsMixin { }
 
 
 
 
     public static class AdminSerializer extends JsonSerializer<Admin> {
         @Override
-        public void serialize(Admin value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(Admin value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeObjectField("applications", value.getApplications());
             jgen.writeObjectField("machines", value.getMachines());
@@ -149,7 +149,7 @@ public class TestAdminPool {
 
     public static class OperatingSystemsSerializer extends JsonSerializer<OperatingSystems>{
         @Override
-        public void serialize(OperatingSystems value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(OperatingSystems value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeObjectField("items", value.getOperatingSystems());
 //            jgen.writeObjectField("statistics", value.getStatistics());
@@ -170,14 +170,14 @@ public class TestAdminPool {
 
     public static class ApplicationsSerializer extends JsonSerializer<Applications> {
         @Override
-        public void serialize(Applications value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(Applications value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeObject(value.getApplications());
         }
     }
 
     public static class ApplicationSerializer extends JsonSerializer<Application> {
         @Override
-        public void serialize(Application value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(Application value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeObjectField("name", value.getName());
             jgen.writeObjectField("processingUnits", value.getProcessingUnits());
@@ -187,7 +187,7 @@ public class TestAdminPool {
 
     public static class ProcessingUnitsSerializer extends JsonSerializer<ProcessingUnits> {
         @Override
-        public void serialize(ProcessingUnits value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(ProcessingUnits value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeObject(value.getProcessingUnits());
         }
     }
@@ -195,7 +195,7 @@ public class TestAdminPool {
 
     public static class ProcessingUnitSerializer extends JsonSerializer<ProcessingUnit> {
         @Override
-        public void serialize(ProcessingUnit value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(ProcessingUnit value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeStringField("name", value.getName());
             jgen.writeNumberField("numberOfBackups", value.getNumberOfBackups());
@@ -208,7 +208,7 @@ public class TestAdminPool {
 
     public static class BeanLevelPropertiesSerializer extends JsonSerializer<BeanLevelProperties>{
         @Override
-        public void serialize(BeanLevelProperties value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(BeanLevelProperties value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeObjectField("contextProperties", value.getContextProperties());
             jgen.writeObjectField("beans",value.getBeans());
@@ -222,7 +222,7 @@ public class TestAdminPool {
     public static class MachinesSerializer extends JsonSerializer<Machines> {
 
         @Override
-        public void serialize(Machines value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(Machines value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeObject(value.getMachines());
         }
     }
@@ -231,7 +231,7 @@ public class TestAdminPool {
     public static class MachineSerializer extends JsonSerializer<Machine> {
 
         @Override
-        public void serialize(Machine value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(Machine value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeStringField("hostName", value.getHostName());
             jgen.writeStringField("hostAddress", value.getHostAddress());
@@ -244,7 +244,7 @@ public class TestAdminPool {
 
     public static class OperatingSystemSerializer extends JsonSerializer<OperatingSystem>{
         @Override
-        public void serialize(OperatingSystem value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(OperatingSystem value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
 //            jgen.writeStringField("uid", value.getUid());
 //            jgen.writeNumberField("currentTimeMillis", value.getCurrentTimeInMillis());
@@ -257,14 +257,14 @@ public class TestAdminPool {
 
     public static class VirtualMachinesSerializer extends JsonSerializer<VirtualMachines>{
         @Override
-        public void serialize(VirtualMachines value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(VirtualMachines value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeObject( value.getVirtualMachines());
         }
     }
 
     public static class VirtualMachineSerializer extends JsonSerializer<VirtualMachine>{
         @Override
-        public void serialize(VirtualMachine value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(VirtualMachine value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeObjectField("details", value.getDetails());
             jgen.writeObjectField("processingUnitInstances", value.getProcessingUnitInstances());
@@ -277,7 +277,7 @@ public class TestAdminPool {
 
     public static class VirtualMachineDetailsSerializer extends JsonSerializer<VirtualMachineDetails> {
         @Override
-        public void serialize(VirtualMachineDetails value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(VirtualMachineDetails value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeBooleanField("isNA", value.isNA());
             jgen.writeStringField("jmxUrl", value.getJmxUrl());
@@ -310,7 +310,7 @@ public class TestAdminPool {
 
     public static class ProcessingUnitInstanceSerializer extends JsonSerializer<ProcessingUnitInstance>{
         @Override
-        public void serialize(ProcessingUnitInstance value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(ProcessingUnitInstance value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
 
             jgen.writeStringField("processingUnitInstanceName", value.getProcessingUnitInstanceName());
@@ -349,7 +349,7 @@ public class TestAdminPool {
 
     public static class GridServiceContainerSerializer extends JsonSerializer<GridServiceContainer>{
         @Override
-        public void serialize(GridServiceContainer value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(GridServiceContainer value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeObjectField("exactZone",value.getExactZones());
             jgen.writeNumberField("agentId", value.getAgentId());
@@ -362,7 +362,7 @@ public class TestAdminPool {
 
     public static class ExactZonesConfigSerializer extends JsonSerializer<ExactZonesConfig>{
         @Override
-        public void serialize(ExactZonesConfig value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(ExactZonesConfig value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeObjectField("properties", value.getProperties());
             jgen.writeObjectField("zones", value.getZones());
@@ -374,7 +374,7 @@ public class TestAdminPool {
 
     public static class ProcessingUnitPartitionSerializer extends JsonSerializer<ProcessingUnitPartition>{
         @Override
-        public void serialize(ProcessingUnitPartition value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(ProcessingUnitPartition value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
 
             jgen.writeNumberField("partitionId", value.getPartitionId());
@@ -390,7 +390,7 @@ public class TestAdminPool {
 
     public static class SpaceInstanceSerializer extends JsonSerializer<SpaceInstance>{
         @Override
-        public void serialize(SpaceInstance value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(SpaceInstance value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
 
             jgen.writeStringField("uid", value.getUid());
@@ -412,7 +412,7 @@ public class TestAdminPool {
 
     public static class SpaceInstanceRuntimeDetailsSerializer extends JsonSerializer<SpaceInstanceRuntimeDetails>{
         @Override
-        public void serialize(SpaceInstanceRuntimeDetails value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(SpaceInstanceRuntimeDetails value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
 
             jgen.writeEndObject();
@@ -422,7 +422,7 @@ public class TestAdminPool {
 
     public static class VirtualMachineStatisticsSerializer extends JsonSerializer<VirtualMachineStatistics>{
         @Override
-        public void serialize(VirtualMachineStatistics value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(VirtualMachineStatistics value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
 
             jgen.writeEndObject();
@@ -432,7 +432,7 @@ public class TestAdminPool {
 
     public static class OperatingSystemStatisticsSerializer extends JsonSerializer<OperatingSystemStatistics>{
         @Override
-        public void serialize(OperatingSystemStatistics value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(OperatingSystemStatistics value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
 
 //            jgen.writeBooleanField("isNA", value.isNA());
@@ -462,7 +462,7 @@ public class TestAdminPool {
 
     public static class NetworkStatisticsSerializer extends JsonSerializer<OperatingSystemStatistics.NetworkStatistics>{
         @Override
-        public void serialize(OperatingSystemStatistics.NetworkStatistics value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(OperatingSystemStatistics.NetworkStatistics value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
 
 //            jgen.writeStringField("name", value.getName());

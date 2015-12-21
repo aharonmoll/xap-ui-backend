@@ -10,5 +10,6 @@
     <mvc:annotation-driven/>
 
     <context:component-scan base-package="app"/>
+    <!--bean id="bookRepository" class="app.DummyBookRepository"/-->
 
 </beans>

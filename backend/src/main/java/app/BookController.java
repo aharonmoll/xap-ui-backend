@@ -13,13 +13,12 @@ import java.net.URI;
 import java.util.List;
 
 @Controller
-@RequestMapping("/books")
 public class BookController {
 
   @Autowired
   BookRepository bookRepository;
 
-  @RequestMapping(method = RequestMethod.GET)
+  @RequestMapping(value = "/books",method = RequestMethod.GET)
   public @ResponseBody List<Book> list() {
     return this.bookRepository.findAll();
   }

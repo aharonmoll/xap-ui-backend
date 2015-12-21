@@ -7,21 +7,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created with IntelliJ IDEA.
- * User: guym
+ * User: Aharon
  * Date: 12/11/13
  * Time: 4:37 PM
  */
 @Controller
-@RequestMapping("/authors")
 public class AuthorController {
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/authors",method = RequestMethod.GET)
     @ResponseBody
     public  String index() {
         return "this is authors";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/list/{id}")
+    @RequestMapping( value = "/list/{id}", method = RequestMethod.GET)
     @ResponseBody
     public String list(){
         return "this is authors list";
